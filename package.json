@@ -4,16 +4,25 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev:ui": "cross-env VITE_UI_ONLY=true vite --port 3000",
+    "dev": "vue-tsc -b && vite build --watch",
     "build": "vue-tsc -b && vite build",
     "preview": "vite preview"
   },
   "dependencies": {
+    "@google/generative-ai": "^0.21.0",
     "vue": "^3.5.13"
   },
   "devDependencies": {
+    "@types/node": "^22.10.5",
+    "@types/tailwindcss": "^3.1.0",
     "@vitejs/plugin-vue": "^5.2.1",
     "@vue/tsconfig": "^0.7.0",
+    "autoprefixer": "^10.4.20",
+    "cross-env": "^7.0.3",
+    "daisyui": "^4.12.23",
+    "postcss": "^8.4.49",
+    "tailwindcss": "^3.4.17",
     "typescript": "~5.6.2",
     "vite": "^6.0.5",
     "vite-plugin-static-copy": "^2.2.0",

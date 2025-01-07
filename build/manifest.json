@@ -4,7 +4,17 @@
   "version": "1.0.0",
   "description": "A simple Vue app as a Chrome extension",
   "action": {
-    "default_popup": "index.html"
+    "default_popup": "index.html",
+    "default_title": "Click to open"
   },
-  "permissions": []
+  "side_panel": {
+    "default_path": "index.html"
+  },
+  "background": {
+    "service_workder": "service-workder.js"
+  },
+  "permissions": [
+    "sidePanel",
+    "management"
+  ]
 }
