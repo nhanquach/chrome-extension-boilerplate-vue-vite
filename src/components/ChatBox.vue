@@ -1,6 +1,6 @@
 <template>
   <div
-    class="w-full card card-compact card-body card-bordered border-base-300 border-2 bg-base-200 backdrop-blur-sm p-4 bg-base-100"
+    class="w-full card card-compact card-body p-2 card-bordered border-base-300 border-2 bg-base-200 backdrop-blur-sm p-4 bg-base-100"
   >
     <form action="#" @submit.prevent="sendMessage" class="flex flex-col gap-2">
       <div class="flex items-center justify-start gap-2">
@@ -17,8 +17,8 @@
         </div>
       </div>
       <div class="flex justify-between align-middle">
-        <select class="select max-w-sm select-sm">
-          <option>Gemini 1.5 flash</option>
+        <select v-model="model" class="select max-w-sm select-sm">
+          <option v-for="model in modelList" :key="model.model" :value="model.model">{{ model.name }}</option>
         </select>
         <button class="btn btn-outline btn-primary btn-sm" :disabled="loading || !message" type="submit">Send</button>
       </div>
@@ -30,9 +30,12 @@
 import { ref } from 'vue';
 
 import type { Message } from '../types/Message';
+import type { Model } from '../types/Model';
 
-defineProps<{ loading: boolean }>();
+const props = defineProps<{ loading: boolean; model: string; modelList: Model[] }>();
 const emit = defineEmits(['send-message']);
+
+const model = ref(props.model);
 const message = ref('');
 
 function submitMessage(event: KeyboardEvent) {
@@ -41,10 +44,11 @@ function submitMessage(event: KeyboardEvent) {
   }
 }
 
-function sendMessage() {
+async function sendMessage() {
   if (!message.value) {
     return;
   }
+
   const newMessage: Message = {
     role: 'user',
     content: message.value,
@@ -52,9 +56,7 @@ function sendMessage() {
     timestamp: Date.now(),
   };
 
-  console.log({ newMessage });
-
-  emit('send-message', newMessage);
+  emit('send-message', newMessage, model.value);
   message.value = '';
 }
 </script>
