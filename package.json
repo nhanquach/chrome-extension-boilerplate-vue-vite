@@ -1,7 +1,7 @@
 {
-  "name": "proof-read-everywhere",
+  "name": "chrome-extrnsion-vue-boilerplate",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.0.1",
   "type": "module",
   "scripts": {
     "dev": "vue-tsc -b && vite build --watch",
