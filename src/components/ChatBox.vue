@@ -8,9 +8,10 @@
           <textarea
             type="text"
             id="userInput"
+            ref="userInput"
             placeholder="Type your message..."
             class="textarea textarea-bordered w-full bg-transparent border-none focus:border-none focus:outline-none"
-            v-model="message"
+            v-model.trim="message"
             @keydown.meta="submitMessage"
             @keydown.ctrl="submitMessage"
           />
@@ -27,7 +28,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, onMounted, useTemplateRef } from 'vue';
 
 import type { Message } from '../types/Message';
 import type { Model } from '../types/Model';
@@ -35,6 +36,7 @@ import type { Model } from '../types/Model';
 const props = defineProps<{ loading: boolean; model: string; modelList: Model[] }>();
 const emit = defineEmits(['send-message']);
 
+const inputEl = useTemplateRef('userInput');
 const model = ref(props.model);
 const message = ref('');
 
@@ -59,4 +61,8 @@ async function sendMessage() {
   emit('send-message', newMessage, model.value);
   message.value = '';
 }
+
+onMounted(() => {
+  inputEl.value?.focus();
+});
 </script>

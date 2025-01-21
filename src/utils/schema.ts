@@ -8,7 +8,7 @@ const schema = {
     },
     content: {
       type: 'string',
-      description: 'The reponse',
+      description: 'The reponse in Mardown format.',
     },
     id: {
       type: 'number',

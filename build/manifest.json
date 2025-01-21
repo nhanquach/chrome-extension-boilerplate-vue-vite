@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "Vue Chrome Extension",
+  "name": "Sidebar AI",
   "version": "1.0.0",
-  "description": "A simple Vue app as a Chrome extension",
+  "description": "Access your AI assistant directly from your browser with a simple sidebar extension.",
   "action": {
     "default_popup": "index.html",
     "default_title": "Click to open"
@@ -10,11 +10,12 @@
   "side_panel": {
     "default_path": "index.html"
   },
-  "background": {
-    "service_workder": "service-workder.js"
-  },
-  "permissions": [
-    "sidePanel",
-    "management"
-  ]
+  "permissions": ["sidePanel"],
+  "commands": {
+    "_execute_action": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+K"
+      }
+    }
+  }
 }

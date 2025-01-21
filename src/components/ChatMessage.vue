@@ -2,7 +2,7 @@
   <div class="card w-full card-compact my-1" ref="chat-message">
     <div class="card-body">
       <div class="flex justify-between flex-wrap align-middle">
-        <strong>{{ message.role }}</strong>
+        <strong class="capitalize">{{ message.role }}</strong>
         <small>{{ new Date(message.timestamp).toLocaleString() }}</small>
       </div>
       <p class="whitespace-pre-line">{{ message.content }}</p>
