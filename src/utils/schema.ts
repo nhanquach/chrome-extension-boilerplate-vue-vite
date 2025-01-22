@@ -1,3 +1,11 @@
+import z from 'zod';
+
+export const zSchema = z.object({
+  role: z.string(),
+  content: z.string(),
+  id: z.number(),
+});
+
 const schema = {
   type: 'object',
   description: 'The reponse',

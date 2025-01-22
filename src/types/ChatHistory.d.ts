@@ -1,6 +1,5 @@
-type ChatHistory = {
-  role: 'user' | 'model';
-  parts: List<{ text: string }>;
-}[];
+import type { Message } from './Message';
+
+type ChatHistory = Message[];
 
 export type { ChatHistory };

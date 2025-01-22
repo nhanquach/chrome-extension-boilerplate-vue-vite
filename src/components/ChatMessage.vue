@@ -1,34 +1,31 @@
 <template>
-  <div class="card w-full card-compact my-1" ref="chat-message">
+  <div class="card w-full card-compact my-1">
     <div class="card-body">
       <div class="flex justify-between flex-wrap align-middle">
         <strong class="capitalize">{{ message.role }}</strong>
         <small>{{ new Date(message.timestamp).toLocaleString() }}</small>
       </div>
       <p class="whitespace-pre-line">{{ message.content }}</p>
-      <small v-if="message.meta && message.meta.candidatesTokenCount"
-        >Token: {{ message.meta.candidatesTokenCount }}</small
-      >
+      <div class="flex gap-8">
+        <small v-if="message.meta && message.meta.completionTokens">
+          Completion Token: {{ message.meta.completionTokens }}
+        </small>
+        <small v-if="message.meta && message.meta.promptTokens">Prompt Token: {{ message.meta.promptTokens }}</small>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { useTemplateRef, onMounted } from 'vue';
+import { onMounted } from 'vue';
 import type { Message } from '../types/Message';
 
-const props = defineProps<{ message: Message }>();
-
-const element = useTemplateRef('chat-message');
-
-console.log('render');
+defineProps<{ message: Message }>();
 
 onMounted(() => {
-  console.log(element.value);
-  if (props.message.role === 'user') {
-    window.scrollTo(0, window.outerHeight + 400);
-  } else if (element.value) {
-    (element.value as HTMLElement).scrollIntoView({ behavior: 'smooth', block: 'end', inline: 'nearest' });
-  }
+  window.scrollTo({
+    top: document.documentElement.scrollHeight + 400,
+    behavior: 'smooth',
+  });
 });
 </script>

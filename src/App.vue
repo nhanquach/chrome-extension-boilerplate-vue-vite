@@ -7,12 +7,12 @@ import ollama from 'ollama/browser';
 import ChatBox from './components/ChatBox.vue';
 import ChatMessage from './components/ChatMessage.vue';
 
-import schema from './utils/schema';
-import { chat } from './services/gemini-service';
+import { buildMessage } from './utils/messageBuilder';
+
+import gemini from './services/gemini-service';
 
 import type { Message } from './types/Message';
 import type { Model } from './types/Model';
-import type { ChatHistory } from './types/ChatHistory';
 
 const geminiModels = [
   { model: 'gemini-2.0-flash-exp', name: 'Gemini 2.0', tag: 'gemini' },
@@ -34,8 +34,9 @@ async function sendMessage(message: Message, model: string) {
   try {
     loading.value = true;
 
-    const prompt = { role: 'user', content: message.content };
     messageList.value.push(message);
+
+    const messages = messageList.value.map(({ role, content }) => ({ role, content }));
 
     const selectedModel = modelList.value.find(m => m.model === model);
 
@@ -44,36 +45,24 @@ async function sendMessage(message: Message, model: string) {
     }
 
     if (selectedModel.tag === 'ollama') {
-      const history = messageList.value
-        .slice(0, messageList.value.length - 1)
-        .map(({ role, content }) => ({ role, content }));
-      const response = await ollama.chat({ model: selectedModel.model, messages: [...history, prompt], stream: false });
-
-      messageList.value.push({
-        role: 'model',
-        content: response.message.content,
-        timestamp: Date.now(),
-        id: Date.now(),
-      });
+      const response = await ollama.chat({ model: selectedModel.model, messages, stream: false });
+      messageList.value.push(
+        buildMessage({
+          ...response,
+          role: 'assistant',
+          content: response.message.content,
+        }),
+      );
     }
 
     if (selectedModel.tag === 'gemini') {
-      const history: ChatHistory = messageList.value.slice(0, messageList.value.length - 1).map(({ role, content }) => {
-        return {
-          role,
-          parts: [{ text: content }],
-        };
-      }) as ChatHistory;
-
-      const aiResponse = await chat({ geminiModel: selectedModel.model, history, message: prompt.content, schema });
-      console.log(aiResponse);
-      messageList.value.push({
-        role: 'model',
-        content: aiResponse.content,
-        timestamp: Date.now(),
-        id: Date.now(),
-        meta: aiResponse.meta,
-      });
+      const aiResponse = await gemini.chat({ geminiModel: selectedModel.model, messages });
+      messageList.value.push(
+        buildMessage({
+          ...aiResponse,
+          role: 'assistant',
+        }),
+      );
     }
   } catch (error) {
     messageList.value.push({

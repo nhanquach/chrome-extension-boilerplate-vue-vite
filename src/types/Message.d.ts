@@ -1,12 +1,12 @@
 type Message = {
-  role: 'user' | 'model' | 'error';
+  role: 'user' | 'assistant' | 'error';
   content: string;
   id: number;
   timestamp: number;
   meta?: {
-    candidatesTokenCount: string;
-    promptTokenCount: string;
-    totalTokenCount: string;
+    completionTokens?: number;
+    promptTokens?: number;
+    totalTokens?: number;
   };
 };
 
