@@ -21,7 +21,9 @@
         <select v-model="model" class="select max-w-sm select-sm">
           <option v-for="model in modelList" :key="model.model" :value="model.model">{{ model.name }}</option>
         </select>
-        <button class="btn btn-outline btn-primary btn-sm" :disabled="loading || !message" type="submit">Send</button>
+        <div class="tooltip" data-tip="Ctrl+Enter to send">
+          <button class="btn btn-outline btn-primary btn-sm" :disabled="loading || !message" type="submit">Send</button>
+        </div>
       </div>
     </form>
   </div>

@@ -25,9 +25,15 @@ const modelList = ref<Model[]>([...geminiModels]);
 
 // export OLLAMA_ORIGINS=* && ollama serve
 onMounted(async () => {
-  const list = (await ollama.list()) || {};
-  const ollamaModels = Object.values(list.models || {}).map((model: Object) => ({ ...model, tag: 'ollama' }) as Model);
-  modelList.value.push(...ollamaModels);
+  try {
+    const list = (await ollama.list()) || {};
+    const ollamaModels = Object.values(list.models || {}).map(
+      (model: Object) => ({ ...model, tag: 'ollama' }) as Model,
+    );
+    modelList.value.push(...ollamaModels);
+  } catch (error) {
+    console.log('Cannot get Ollama Models.');
+  }
 });
 
 async function sendMessage(message: Message, model: string) {
@@ -75,15 +81,27 @@ async function sendMessage(message: Message, model: string) {
     loading.value = false;
   }
 }
+
+function newChat() {
+  messageList.value = [];
+}
 </script>
 
 <template>
   <div>
-    <div class="navbar bg-base-200">
-      <button class="btn btn-ghost text-xl">Sidebar AI</button>
-    </div>
+    <nav class="navbar bg-base-200 flex justify-between">
+      <button class="btn btn-ghost">Sidebar AI</button>
+      <button class="btn btn-outline btn-sm" @click="newChat">New chat</button>
+    </nav>
     <main class="container max-w-2xl mx-auto p-4 min-h-[calc(100vh-96px)] relative">
       <div class="content min-h-[calc(100vh-120px-120px)]">
+        <div
+          class="flex flex-col gap-4 items-center justify-center h-[calc(100vh-120px-120px)]"
+          v-if="messageList.length === 0"
+        >
+          <p><kbd class="kbd">Ctrl</kbd> + <kbd class="kbd">Shift</kbd> + <kbd class="kbd">K</kbd></p>
+          <p>Open the sidebar</p>
+        </div>
         <ChatMessage v-for="message in messageList" :key="message.id" :message="message" />
         <div class="loading loading-dots m-4" v-if="loading">Loading...</div>
       </div>
