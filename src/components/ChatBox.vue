@@ -1,6 +1,6 @@
 <template>
   <div
-    class="w-full card card-compact card-body p-2 card-bordered border-base-300 border-2 bg-base-200 backdrop-blur-sm p-4 bg-base-100"
+    class="w-full card card-compact card-body card-bordered border-base-300 border-2 backdrop-blur-sm p-4 bg-base-100"
   >
     <form action="#" @submit.prevent="sendMessage" class="flex flex-col gap-2">
       <div class="flex items-center justify-start gap-2">
